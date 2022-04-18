@@ -25,6 +25,7 @@ class Asset:
             self.stage_images['sky'][sky]=surface
         
         self.stage_images['ground']=pygame.Surface(ground_size)
+        self.stage_images['ground'].blit(self.general_sheet_image,(0,0),(292,0,168,56))
         self.stage_images['ground']=pygame.transform.scale(self.stage_images['ground'],GROUND_SIZE)
     
     def get_player_image(self):
