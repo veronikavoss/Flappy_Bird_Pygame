@@ -1,5 +1,5 @@
-from asset import Asset
 from setting import *
+from asset import Asset
 from controller import Controller
 
 class Main:
@@ -8,6 +8,7 @@ class Main:
         pygame.display.set_caption(TITLE)
         self.screen=pygame.display.set_mode(SCREEN_SIZE)
         self.asset=Asset()
+        pygame.display.set_icon(self.asset.title_icon)
         self.clock=pygame.time.Clock()
         self.start()
     
@@ -33,7 +34,6 @@ class Main:
         self.controller.update()
     
     def draw(self):
-        self.screen.fill('white')
         self.controller.draw()
 
 if __name__=='__main__':
