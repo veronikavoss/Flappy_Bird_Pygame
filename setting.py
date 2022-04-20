@@ -10,3 +10,5 @@ FPS=60
 
 CURRENT_PATH=os.path.dirname(os.path.abspath(__file__))
 IMAGE_PATH=os.path.join(CURRENT_PATH,'image')
+
+PLAYING_GAME=False
