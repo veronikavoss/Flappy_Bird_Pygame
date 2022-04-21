@@ -5,15 +5,17 @@ from ui import Ui
 import random
 
 
-class Controller:
+class Controller(Ui):
     def __init__(self,screen,asset):
+        Ui.__init__(self,asset)
         self.screen=screen
         self.asset=asset
         
         self.set_sky_image()
         self.ground=pygame.sprite.GroupSingle(Ground(self.asset))
         self.player=pygame.sprite.GroupSingle(Player(self.asset))
-        self.ui=Ui(self.asset)
+        
+        self.score=0
     
     def set_sky_image(self):
         sky=random.choice(list(self.asset.stage_images['sky'].keys()))
@@ -28,4 +30,5 @@ class Controller:
         self.screen.blit(self.sky_image,(0,0))
         self.ground.draw(self.screen)
         self.player.draw(self.screen)
-        self.ui.draw(self.screen)
+        self.start_screen_draw(self.screen)
+        self.number_draw(self.screen,self.score)
