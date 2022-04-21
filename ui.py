@@ -1,4 +1,3 @@
-import numbers
 from setting import *
 
 class Ui:
@@ -20,22 +19,39 @@ class Ui:
         self.ranking_rect=self.ranking.get_rect(center=(SKY_WIDTH-(SKY_WIDTH//3.6),SKY_HEIGHT//1.5))
     
     def number_images(self):
-        number=9
-        self.large_numbers=self.asset.number_images['large'][number]
-        self.large_number_rect=self.large_numbers.get_rect()
+        number=0
+        self.large_number=self.asset.number_images['large'][number]
+        self.large_number_rect=self.large_number.get_rect(center=(SKY_WIDTH//2,SKY_HEIGHT//6))
         
-        self.medium_numbers=self.asset.number_images['medium'][number]
-        self.medium_number_rect=self.medium_numbers.get_rect()
+        # self.medium_numbers=self.asset.number_images['medium'][number]
+        # self.medium_number_rect=self.medium_numbers.get_rect()
         
-        self.small_numbers=self.asset.number_images['small'][number]
-        self.small_number_rect=self.small_numbers.get_rect()
+        # self.small_numbers=self.asset.number_images['small'][number]
+        # self.small_number_rect=self.small_numbers.get_rect()
     
-    def draw(self,screen):
+    def start_screen_draw(self,screen):
         screen.blits([
-            # [self.large_numbers,self.large_number_rect],
-            # [self.medium_numbers,self.medium_number_rect],
-            # [self.small_numbers,self.small_number_rect],
             [self.logo,self.logo_rect],
             [self.play_button,self.start_play_button_rect],
             [self.ranking,self.ranking_rect]
         ])
+    
+    def number_draw(self,screen,score):
+        self.large_number=self.asset.number_images['large'][score]
+        self.large_number_rect=self.large_number.get_rect(center=(SKY_WIDTH//2,SKY_HEIGHT//6))
+        
+        # self.medium_numbers=self.asset.number_images['medium'][number]
+        # self.medium_number_rect=self.medium_numbers.get_rect()
+        
+        # self.small_numbers=self.asset.number_images['small'][number]
+        # self.small_number_rect=self.small_numbers.get_rect()
+        
+        screen.blits([
+            [self.large_number,self.large_number_rect],
+            # [self.medium_numbers,self.medium_number_rect],
+            # [self.small_numbers,self.small_number_rect]
+        ])
+#%%
+for i,j in enumerate('100'):
+    print(i,j)
+#%%
