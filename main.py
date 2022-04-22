@@ -1,4 +1,3 @@
-#%%
 from setting import *
 from asset import Asset
 from controller import Controller
@@ -40,4 +39,3 @@ class Main:
 if __name__=='__main__':
     Main()
     pygame.quit()
-#%%

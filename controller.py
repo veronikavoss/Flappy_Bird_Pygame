@@ -31,4 +31,4 @@ class Controller(Ui):
         self.ground.draw(self.screen)
         self.player.draw(self.screen)
         self.start_screen_draw(self.screen)
-        self.number_draw(self.screen,self.score)
+        self.score_draw(self.screen,self.score)

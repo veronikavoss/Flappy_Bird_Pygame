@@ -5,7 +5,7 @@ class Ui:
         self.asset=asset
         
         self.start_screen_images()
-        self.number_images()
+        # self.number_images()
     
     def start_screen_images(self):
         self.logo=self.asset.start_screen['logo']
@@ -18,16 +18,10 @@ class Ui:
         self.ranking=self.asset.start_screen['ranking']
         self.ranking_rect=self.ranking.get_rect(center=(SKY_WIDTH-(SKY_WIDTH//3.6),SKY_HEIGHT//1.5))
     
-    def number_images(self):
-        number=0
-        self.large_number=self.asset.number_images['large'][number]
-        self.large_number_rect=self.large_number.get_rect(center=(SKY_WIDTH//2,SKY_HEIGHT//6))
-        
-        # self.medium_numbers=self.asset.number_images['medium'][number]
-        # self.medium_number_rect=self.medium_numbers.get_rect()
-        
-        # self.small_numbers=self.asset.number_images['small'][number]
-        # self.small_number_rect=self.small_numbers.get_rect()
+    def get_number_images_size(self,size):
+        number=self.asset.number_images[size][0]
+        self.number_width=number.get_size()[0]
+        return self.number_width
     
     def start_screen_draw(self,screen):
         screen.blits([
@@ -36,21 +30,20 @@ class Ui:
             [self.ranking,self.ranking_rect]
         ])
     
-    def number_draw(self,screen,score):
-        self.large_number=self.asset.number_images['large'][score]
-        self.large_number_rect=self.large_number.get_rect(center=(SKY_WIDTH//2,SKY_HEIGHT//6))
-        
-        # self.medium_numbers=self.asset.number_images['medium'][number]
-        # self.medium_number_rect=self.medium_numbers.get_rect()
-        
-        # self.small_numbers=self.asset.number_images['small'][number]
-        # self.small_number_rect=self.small_numbers.get_rect()
-        
-        screen.blits([
-            [self.large_number,self.large_number_rect],
-            # [self.medium_numbers,self.medium_number_rect],
-            # [self.small_numbers,self.small_number_rect]
-        ])
+    def score_draw(self,screen,score):
+        for idx,number in enumerate(reversed(list(str(score)))):
+            if idx==0:
+                pos_x=SKY_WIDTH//2+(self.get_number_images_size('large')//2*(len(str(score))-1))
+            elif idx==1:
+                pos_x=(SKY_WIDTH//2-self.get_number_images_size('large'))+(self.get_number_images_size('large')//2*(len(str(score))-1))
+            elif idx==2:
+                pos_x=(SKY_WIDTH//2-self.get_number_images_size('large')*2)+(self.get_number_images_size('large')//2*(len(str(score))-1))
+            elif idx==3:
+                pos_x=(SKY_WIDTH//2-self.get_number_images_size('large')*3)+(self.get_number_images_size('large')//2*(len(str(score))-1))
+            
+            large_number=self.asset.number_images['large'][int(number)]
+            large_number_rect=large_number.get_rect(center=(pos_x,SKY_HEIGHT//6))
+            screen.blit(large_number,large_number_rect)
 #%%
 for i,j in enumerate('100'):
     print(i,j)
