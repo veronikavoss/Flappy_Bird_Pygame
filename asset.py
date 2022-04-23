@@ -14,7 +14,7 @@ class Asset:
         self.title_icon=pygame.Surface((29,29))
         self.title_icon.blit(self.icon_sheet_image,(0,0),(592,0,29,29))
         
-        self.start_screen={'logo':None,'play_button':None,'ranking':None}
+        self.start_screen={'logo':None,'play_button':None,'ranking_button':None,'ready':None,'tap':None}
         
         logo_img=pygame.Surface((89,24))
         logo_img.blit(self.general_sheet_image,(0,0),(351,91,89,24))
@@ -32,7 +32,19 @@ class Asset:
         ranking_img.blit(self.general_sheet_image,(0,0),(414,118,52,29))
         ranking_img.set_colorkey((0,0,0))
         ranking_img=pygame.transform.scale(ranking_img,(52*SCALE,29*SCALE))
-        self.start_screen['ranking']=ranking_img
+        self.start_screen['ranking_button']=ranking_img
+        
+        ready_img=pygame.Surface((92,25))
+        ready_img.blit(self.general_sheet_image,(0,0),(295,59,92,25))
+        ready_img.set_colorkey((0,0,0))
+        ready_img=pygame.transform.scale(ready_img,(92*SCALE,25*SCALE))
+        self.start_screen['ready']=ready_img
+        
+        tap_img=pygame.Surface((57,49))
+        tap_img.blit(self.general_sheet_image,(0,0),(292,91,57,49))
+        tap_img.set_colorkey((0,0,0))
+        tap_img=pygame.transform.scale(tap_img,(57*SCALE,49*SCALE))
+        self.start_screen['tap']=tap_img
     
     def get_number_image(self):
         self.number_images={'large':[],'medium':[],'small':[]}
@@ -83,7 +95,7 @@ class Asset:
         for i,sky in enumerate(self.stage_images['sky'].keys()):
             surface=pygame.Surface(sky_size)
             surface.blit(self.general_sheet_image,(0,0),(146*i,0,144,256))
-            surface=pygame.transform.scale(surface,SKY_SIZE)
+            surface=pygame.transform.scale(surface,SCREEN_SIZE)
             self.stage_images['sky'][sky]=surface
         
         self.stage_images['ground']=pygame.Surface(ground_size)
