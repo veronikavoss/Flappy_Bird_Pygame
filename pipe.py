@@ -1,5 +1,4 @@
 from setting import *
-import random
 
 class Pipe(pygame.sprite.Sprite):
     def __init__(self,asset,color,pos,flip=False):

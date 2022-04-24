@@ -46,10 +46,10 @@ class Controller(Ui):
         current_time=pygame.time.get_ticks()
         if current_time-self.update_pipe_spawn_timer>=1300:
             pipe_height=random.choice((
-                SKY_HEIGHT//5-PLAYER_HEIGHT*2,
-                SKY_HEIGHT//5*2-PLAYER_HEIGHT*2,
-                SKY_HEIGHT//5*3-PLAYER_HEIGHT*2,
-                SKY_HEIGHT//5*4-PLAYER_HEIGHT*2
+                SKY_HEIGHT//9*3-PLAYER_HEIGHT*2,
+                SKY_HEIGHT//9*4-PLAYER_HEIGHT*2,
+                SKY_HEIGHT//9*5-PLAYER_HEIGHT*2,
+                SKY_HEIGHT//9*6-PLAYER_HEIGHT*2
             ))
             top_pipe=Pipe(self.asset,self.pipe_color,pipe_height,True)
             bottom_pipe=Pipe(self.asset,self.pipe_color,top_pipe.rect.bottom+160*SCALE+PLAYER_HEIGHT*4)
@@ -75,4 +75,3 @@ class Controller(Ui):
         self.score_draw(self.screen,self.score)
         pygame.draw.circle(self.screen, 'red', (SKY_WIDTH//2,SKY_HEIGHT//2), 2, width=5)
         print(self.player.sprite.game_status)
-        print(self.pipe)
