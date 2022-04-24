@@ -9,6 +9,7 @@ class Asset:
         self.get_number_image()
         self.get_stage_image()
         self.get_player_image()
+        self.get_pipe_image()
     
     def get_ui_image(self):
         self.title_icon=pygame.Surface((29,29))
@@ -50,8 +51,8 @@ class Asset:
         self.number_images={'large':[],'medium':[],'small':[]}
         
         # large number
-        large_number_pos=[[496,60,12,18],[136,455,12,18]]
-        for rect in large_number_pos:
+        large_number_offset=[[496,60,12,18],[136,455,12,18]]
+        for rect in large_number_offset:
             surface=pygame.Surface((12,18))
             surface.blit(self.general_sheet_image,(0,0),rect)
             surface.set_colorkey((0,0,0))
@@ -67,10 +68,10 @@ class Asset:
                 self.number_images['large'].append(surface)
         
         # medium number
-        medium_number_pos=[
+        medium_number_offset=[
             [137,306,7,10],[137,477,7,10],[137,489,7,10],[131,501,7,10],[502,0,7,10],\
             [502,12,7,10],[505,26,7,10],[505,42,7,10],[293,242,7,10],[311,206,7,10]]
-        for rect in medium_number_pos:
+        for rect in medium_number_offset:
             surface=pygame.Surface((7,10))
             surface.blit(self.general_sheet_image,(0,0),rect)
             surface.set_colorkey((0,0,0))
@@ -104,18 +105,34 @@ class Asset:
     
     def get_player_image(self):
         self.player_images={'yellow':[],'blue':[],'red':[]}
-        positions=[
+        
+        player_images_offset=[
             [[3,491,17,12],[31,491,17,12],[59,491,17,12]],
             [[87,491,17,12],[115,329,17,12],[115,355,17,12]],
             [[115,381,17,12],[115,407,17,12],[115,433,17,12]]
         ]
         
         for i,color in enumerate(self.player_images.keys()):
-            for rect in positions[i]:
+            for rect in player_images_offset[i]:
                 surface=pygame.Surface((17,12))
                 surface.blit(self.general_sheet_image,(0,0),rect)
                 surface.set_colorkey((0,0,0))
                 surface=pygame.transform.scale(surface,PLAYER_SIZE)
                 self.player_images[color].append(surface)
+    
+    def get_pipe_image(self):
+        self.pipe_images={'red':None,'green':None}
+        
+        pipe_images_offset=[[0,323,26,160],[84,323,26,160]]
+        
+        for idx,pipe in enumerate(pipe_images_offset):
+            surface=pygame.Surface((26,160))
+            surface.blit(self.general_sheet_image,(0,0),pipe)
+            surface.set_colorkey((0,0,0))
+            surface=pygame.transform.scale(surface,(26*SCALE,160*SCALE))
+            if idx==0:
+                self.pipe_images['red']=surface 
+            else:
+                self.pipe_images['green']=surface
 
 # Asset()

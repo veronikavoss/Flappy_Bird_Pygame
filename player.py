@@ -18,16 +18,24 @@ class Player(pygame.sprite.Sprite):
         self.jump_pressed=False
         self.mouse_pressed=False
     
-    def set_gravity(self):
-        self.rect.y+=self.direction.y
-        self.direction.y+=self.gravity
-    
-    def set_idle(self):
+    def set_idle_animate(self):
         if self.player_status=='idle':
             if pygame.time.get_ticks()//500%2==0:
                 self.rect.y+=1
             else:
                 self.rect.y-=1
+    
+    def animate(self):
+        animation=self.asset.player_images[self.color]
+        self.frame_index+=0.1
+        if self.frame_index>=len(animation):
+            self.frame_index=0
+        self.image=animation[int(self.frame_index)]
+        self.image=pygame.transform.rotate(self.image,max(-self.direction.y*4,-90))
+    
+    def set_gravity(self):
+        self.rect.y+=self.direction.y
+        self.direction.y+=self.gravity
     
     def set_key_input(self):
         if self.game_status=='playing_game' and self.player_status=='playing':
@@ -41,5 +49,6 @@ class Player(pygame.sprite.Sprite):
                 self.jump_pressed=False
     
     def update(self):
-        self.set_idle()
+        self.set_idle_animate()
+        self.animate()
         self.set_key_input()
