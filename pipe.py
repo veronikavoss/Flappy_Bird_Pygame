@@ -9,7 +9,8 @@ class Pipe(pygame.sprite.Sprite):
         self.rect=self.image.get_rect(left=SCREEN_WIDTH,bottom=pos)
         self.rect.size[1]
     
-    def update(self):
-        self.rect.x-=1*SCALE
+    def update(self,status):
+        if status=='playing':
+            self.rect.x-=1*SCALE
         if self.rect.right<0:
             self.kill()

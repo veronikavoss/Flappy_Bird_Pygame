@@ -8,7 +8,8 @@ class Ground(pygame.sprite.Sprite):
         self.rect=self.image.get_rect(bottom=SCREEN_HEIGHT)
         self.speed=-3
     
-    def update(self):
-        self.rect.move_ip(self.speed,0)
-        if self.rect.right<SCREEN_WIDTH:
-            self.rect.left=0
+    def update(self,status):
+        if status!='die' and status!='crash':
+            self.rect.move_ip(self.speed,0)
+            if self.rect.right<SCREEN_WIDTH:
+                self.rect.left=0

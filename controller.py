@@ -43,26 +43,38 @@ class Controller(Ui):
         self.update_pipe_spawn_timer=pygame.time.get_ticks()
     
     def spawn_pipe(self):
-        current_time=pygame.time.get_ticks()
-        if current_time-self.update_pipe_spawn_timer>=1300:
-            pipe_height=random.choice((
-                SKY_HEIGHT//9*3-PLAYER_HEIGHT*2,
-                SKY_HEIGHT//9*4-PLAYER_HEIGHT*2,
-                SKY_HEIGHT//9*5-PLAYER_HEIGHT*2,
-                SKY_HEIGHT//9*6-PLAYER_HEIGHT*2
-            ))
-            top_pipe=Pipe(self.asset,self.pipe_color,pipe_height,True)
-            bottom_pipe=Pipe(self.asset,self.pipe_color,top_pipe.rect.bottom+160*SCALE+PLAYER_HEIGHT*4)
-            self.pipe.add(top_pipe,bottom_pipe)
-            self.pipe_spawn_timer()
+        if self.player.sprite.game_status=='playing_game' and self.player.sprite.player_status=='playing':
+            current_time=pygame.time.get_ticks()
+            if current_time-self.update_pipe_spawn_timer>=1300:
+                pipe_height=random.choice((
+                    SKY_HEIGHT//9*3-PLAYER_HEIGHT*2.5,
+                    SKY_HEIGHT//9*4-PLAYER_HEIGHT*2.5,
+                    SKY_HEIGHT//9*5-PLAYER_HEIGHT*2.5,
+                    SKY_HEIGHT//9*6-PLAYER_HEIGHT*2.5
+                ))
+                top_pipe=Pipe(self.asset,self.pipe_color,pipe_height,True)
+                bottom_pipe=Pipe(self.asset,self.pipe_color,top_pipe.rect.bottom+160*SCALE+PLAYER_HEIGHT*5)
+                self.pipe.add(top_pipe,bottom_pipe)
+                self.pipe_spawn_timer()
+    
+    def collision(self):
+        player_collide_pipe=pygame.sprite.spritecollideany(self.player.sprite,self.pipe,pygame.sprite.collide_mask)
+        player_collide_ground=pygame.sprite.collide_mask(self.player.sprite,self.ground.sprite)
+        if player_collide_pipe:
+            self.player.sprite.player_status='crash'
+        if player_collide_ground:
+            self.player.sprite.player_status='die'
+            self.player.sprite.game_status='game_over'
+            self.player.sprite.rect.bottom=SKY_HEIGHT-(PLAYER_WIDTH-PLAYER_HEIGHT)
     
     def update(self):
         self.spawn_pipe()
-        self.pipe.update()
-        self.ground.update()
+        self.pipe.update(self.player.sprite.player_status)
+        self.ground.update(self.player.sprite.player_status)
         self.player.update()
         self.set_game_start()
         self.tap_image_animate()
+        self.collision()
     
     def draw(self):
         self.screen.fill('black')
@@ -73,5 +85,4 @@ class Controller(Ui):
         self.start_screen_draw(self.screen)
         self.ready_screen_draw(self.screen)
         self.score_draw(self.screen,self.score)
-        pygame.draw.circle(self.screen, 'red', (SKY_WIDTH//2,SKY_HEIGHT//2), 2, width=5)
-        print(self.player.sprite.game_status)
+        print(self.player.sprite.player_status)
