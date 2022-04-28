@@ -20,6 +20,7 @@ class Controller(Ui):
         self.position_changed=False
         
         self.score=0
+        self.scoring=False
     
     def set_start_screen(self):
         # start_screen
@@ -40,6 +41,7 @@ class Controller(Ui):
             if key_input[pygame.K_SPACE] or key_input[pygame.K_RIGHT]:
                 self.player.sprite.game_status='playing_game'
                 self.player.sprite.player_status='playing'
+                self.position_changed=False
     
     def set_sky_image(self):
         sky=random.choice(list(self.asset.stage_images['sky'].keys()))
@@ -59,9 +61,18 @@ class Controller(Ui):
                     SKY_HEIGHT//9*6-PLAYER_HEIGHT*2.5
                 ))
                 top_pipe=Pipe(self.asset,self.pipe_color,pipe_height,True)
-                bottom_pipe=Pipe(self.asset,self.pipe_color,top_pipe.rect.bottom+160*SCALE+PLAYER_HEIGHT*5)
+                bottom_pipe=Pipe(self.asset,self.pipe_color,top_pipe.rect.bottom+160*SCALE+PLAYER_HEIGHT*5,index=1)
                 self.pipe.add(top_pipe,bottom_pipe)
                 self.pipe_spawn_timer()
+    
+    def set_score(self):
+        for pipe in self.pipe:
+            if pipe.rect.collidepoint(pygame.mouse.get_pos()):
+                print(pipe.index)
+            if pipe.index:
+                if self.player.sprite.rect.left>=pipe.rect.left:
+                    self.score+=1
+                    pipe.index=None
     
     def collision(self):
         player_collide_pipe=pygame.sprite.spritecollideany(self.player.sprite,self.pipe,pygame.sprite.collide_mask)
@@ -71,6 +82,7 @@ class Controller(Ui):
         if player_collide_ground:
             self.player.sprite.player_status='die'
             self.player.sprite.game_status='game_over'
+            self.player.sprite.gravity=0
             self.player.sprite.rect.bottom=SKY_HEIGHT-(PLAYER_WIDTH-PLAYER_HEIGHT)
     
     def update(self):
@@ -81,6 +93,7 @@ class Controller(Ui):
         self.set_start_screen()
         self.set_ready_screen()
         self.tap_image_animate()
+        self.set_score()
         self.collision()
     
     def draw(self):
@@ -92,4 +105,5 @@ class Controller(Ui):
         self.start_screen_draw(self.screen)
         self.ready_screen_draw(self.screen)
         self.score_draw(self.screen,self.score)
-        print(self.player.sprite.player_status)
+        
+        # print(self.player.sprite.player_status)

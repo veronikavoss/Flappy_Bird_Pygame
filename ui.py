@@ -66,7 +66,3 @@ class Ui:
                 large_number=self.asset.number_images['large'][int(number)]
                 large_number_rect=large_number.get_rect(center=(pos_x,SKY_HEIGHT//8))
                 screen.blit(large_number,large_number_rect)
-#%%
-for i,j in enumerate('100'):
-    print(i,j)
-#%%
