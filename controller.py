@@ -17,19 +17,25 @@ class Controller(Ui):
         self.pipe=pygame.sprite.Group()
         self.ground=pygame.sprite.GroupSingle(Ground(self.asset))
         self.player=pygame.sprite.GroupSingle(Player(self.asset))
+        self.position_changed=False
         
         self.score=0
     
-    def set_game_start(self):
+    def set_start_screen(self):
         # start_screen
         if self.player.sprite.game_status=='start_screen':
+            # self.player.sprite.rect.center=(SCREEN_WIDTH//4,SCREEN_HEIGHT//2.2)
             mouse_pos=pygame.mouse.get_pos()
             if self.start_play_button_rect.collidepoint(mouse_pos):
                 if pygame.mouse.get_pressed()[0]:
                     self.player.sprite.game_status='ready_screen'
-        
+    
+    def set_ready_screen(self):
         # ready_screen
         if self.player.sprite.game_status=='ready_screen':
+            if self.position_changed==False:
+                self.player.sprite.set_position()
+                self.position_changed=True
             key_input=pygame.key.get_pressed()
             if key_input[pygame.K_SPACE] or key_input[pygame.K_RIGHT]:
                 self.player.sprite.game_status='playing_game'
@@ -72,7 +78,8 @@ class Controller(Ui):
         self.pipe.update(self.player.sprite.player_status)
         self.ground.update(self.player.sprite.player_status)
         self.player.update()
-        self.set_game_start()
+        self.set_start_screen()
+        self.set_ready_screen()
         self.tap_image_animate()
         self.collision()
     
