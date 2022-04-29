@@ -17,7 +17,7 @@ class Controller(Ui):
         self.pipe=pygame.sprite.Group()
         self.ground=pygame.sprite.GroupSingle(Ground(self.asset))
         self.player=pygame.sprite.GroupSingle(Player(self.asset))
-        self.position_changed=False
+        self.ready_position=True
         
         self.score=0
         self.scoring=False
@@ -25,7 +25,6 @@ class Controller(Ui):
     def set_start_screen(self):
         # start_screen
         if self.player.sprite.game_status=='start_screen':
-            # self.player.sprite.rect.center=(SCREEN_WIDTH//4,SCREEN_HEIGHT//2.2)
             mouse_pos=pygame.mouse.get_pos()
             if self.start_play_button_rect.collidepoint(mouse_pos):
                 if pygame.mouse.get_pressed()[0]:
@@ -34,14 +33,14 @@ class Controller(Ui):
     def set_ready_screen(self):
         # ready_screen
         if self.player.sprite.game_status=='ready_screen':
-            if self.position_changed==False:
+            if self.ready_position:
                 self.player.sprite.set_position()
-                self.position_changed=True
+                self.ready_position=False
             key_input=pygame.key.get_pressed()
             if key_input[pygame.K_SPACE] or key_input[pygame.K_RIGHT]:
                 self.player.sprite.game_status='playing_game'
                 self.player.sprite.player_status='playing'
-                self.position_changed=False
+                self.ready_position=True
     
     def set_sky_image(self):
         sky=random.choice(list(self.asset.stage_images['sky'].keys()))
@@ -67,8 +66,6 @@ class Controller(Ui):
     
     def set_score(self):
         for pipe in self.pipe:
-            if pipe.rect.collidepoint(pygame.mouse.get_pos()):
-                print(pipe.index)
             if pipe.index:
                 if self.player.sprite.rect.left>=pipe.rect.left:
                     self.score+=1
@@ -81,9 +78,13 @@ class Controller(Ui):
             self.player.sprite.player_status='crash'
         if player_collide_ground:
             self.player.sprite.player_status='die'
-            self.player.sprite.game_status='game_over'
+            self.player.sprite.game_status='game_over_screen'
             self.player.sprite.gravity=0
             self.player.sprite.rect.bottom=SKY_HEIGHT-(PLAYER_WIDTH-PLAYER_HEIGHT)
+    
+    def set_game_over(self):
+        if self.player.sprite.game_status=='game_over_screen':
+            pass
     
     def update(self):
         self.spawn_pipe()
@@ -102,8 +103,8 @@ class Controller(Ui):
         self.pipe.draw(self.screen)
         self.ground.draw(self.screen)
         self.player.draw(self.screen)
-        self.start_screen_draw(self.screen)
-        self.ready_screen_draw(self.screen)
-        self.score_draw(self.screen,self.score)
-        
+        self.draw_start_screen(self.screen)
+        self.draw_ready_screen(self.screen)
+        self.draw_score(self.screen,self.score)
+        self.draw_game_over(self.screen,self.score)
         # print(self.player.sprite.player_status)

@@ -15,37 +15,65 @@ class Asset:
         self.title_icon=pygame.Surface((29,29))
         self.title_icon.blit(self.icon_sheet_image,(0,0),(592,0,29,29))
         
-        self.start_screen={'logo':None,'play_button':None,'ranking_button':None,'ready':None,'tap':None}
+        self.ui_images={'logo':None,'play_button':None,'ranking_button':None,
+                        'ready':None,'tap':None,
+                        'game_over':None,'score_board':None,'new':None,'medal':[]}
         
         logo_img=pygame.Surface((89,24))
         logo_img.blit(self.general_sheet_image,(0,0),(351,91,89,24))
         logo_img.set_colorkey((0,0,0))
         logo_img=pygame.transform.scale(logo_img,(89*SCALE,24*SCALE))
-        self.start_screen['logo']=logo_img
+        self.ui_images['logo']=logo_img
         
         play_button_img=pygame.Surface((52,29))
         play_button_img.blit(self.general_sheet_image,(0,0),(354,118,52,29))
         play_button_img.set_colorkey((0,0,0))
         play_button_img=pygame.transform.scale(play_button_img,(52*SCALE,29*SCALE))
-        self.start_screen['play_button']=play_button_img
+        self.ui_images['play_button']=play_button_img
         
         ranking_img=pygame.Surface((52,29))
         ranking_img.blit(self.general_sheet_image,(0,0),(414,118,52,29))
         ranking_img.set_colorkey((0,0,0))
         ranking_img=pygame.transform.scale(ranking_img,(52*SCALE,29*SCALE))
-        self.start_screen['ranking_button']=ranking_img
+        self.ui_images['ranking_button']=ranking_img
         
         ready_img=pygame.Surface((92,25))
         ready_img.blit(self.general_sheet_image,(0,0),(295,59,92,25))
         ready_img.set_colorkey((0,0,0))
         ready_img=pygame.transform.scale(ready_img,(92*SCALE,25*SCALE))
-        self.start_screen['ready']=ready_img
+        self.ui_images['ready']=ready_img
         
         tap_img=pygame.Surface((57,49))
         tap_img.blit(self.general_sheet_image,(0,0),(292,91,57,49))
         tap_img.set_colorkey((0,0,0))
         tap_img=pygame.transform.scale(tap_img,(57*SCALE,49*SCALE))
-        self.start_screen['tap']=tap_img
+        self.ui_images['tap']=tap_img
+        
+        game_over_img=pygame.Surface((96,21))
+        game_over_img.blit(self.general_sheet_image,(0,0),(395,59,96,21))
+        game_over_img.set_colorkey((0,0,0))
+        game_over_img=pygame.transform.scale(game_over_img,(96*SCALE,21*SCALE))
+        self.ui_images['game_over']=game_over_img
+        
+        score_board_img=pygame.Surface((113,57))
+        score_board_img.blit(self.general_sheet_image,(0,0),(3,259,113,57))
+        score_board_img.set_colorkey((0,0,0))
+        score_board_img=pygame.transform.scale(score_board_img,(113*SCALE,57*SCALE))
+        self.ui_images['score_board']=score_board_img
+        
+        new_img=pygame.Surface((16,7))
+        new_img.blit(self.general_sheet_image,(0,0),(112,501,16,7))
+        new_img.set_colorkey((0,0,0))
+        new_img=pygame.transform.scale(new_img,(16*SCALE,7*SCALE))
+        self.ui_images['new']=new_img
+        
+        medal_pos=[[121,258,22,22],[121,282,22,22],[112,453,22,22],[112,477,22,22]]
+        for pos in medal_pos:
+            surface=pygame.Surface((22,22))
+            surface.blit(self.general_sheet_image,(0,0),pos)
+            surface.set_colorkey((0,0,0))
+            surface=pygame.transform.scale(surface,(22*SCALE,22*SCALE))
+            self.ui_images['medal'].append(surface)
     
     def get_number_image(self):
         self.number_images={'large':[],'medium':[],'small':[]}
