@@ -20,14 +20,31 @@ class Controller(Ui):
         self.ready_position=True
         
         self.score=0
+        self.best_score=False
         self.scoring=False
     
-    def set_start_screen(self):
+    def open_high_score(self):
+        with open('high_score.txt','r') as r:
+            high_score=r.readline()
+            return int(high_score)
+    
+    def save_high_score(self):
+        with open('high_score.txt','w') as w:
+            w.write(str(self.score))
+    
+    def set_play_button(self):
         # start_screen
         if self.player.sprite.game_status=='start_screen':
             mouse_pos=pygame.mouse.get_pos()
-            if self.start_play_button_rect.collidepoint(mouse_pos):
+            if self.play_button_rect.collidepoint(mouse_pos):
                 if pygame.mouse.get_pressed()[0]:
+                    self.player.sprite.game_status='ready_screen'
+        # game_over__screen
+        elif self.player.sprite.game_status=='game_over_screen':
+            mouse_pos=pygame.mouse.get_pos()
+            if self.play_button_rect.collidepoint(mouse_pos):
+                if pygame.mouse.get_pressed()[0]:
+                    self.__init__(self.screen,self.asset)
                     self.player.sprite.game_status='ready_screen'
     
     def set_ready_screen(self):
@@ -82,20 +99,17 @@ class Controller(Ui):
             self.player.sprite.gravity=0
             self.player.sprite.rect.bottom=SKY_HEIGHT-(PLAYER_WIDTH-PLAYER_HEIGHT)
     
-    def set_game_over(self):
-        if self.player.sprite.game_status=='game_over_screen':
-            pass
-    
     def update(self):
         self.spawn_pipe()
         self.pipe.update(self.player.sprite.player_status)
         self.ground.update(self.player.sprite.player_status)
         self.player.update()
-        self.set_start_screen()
+        self.set_play_button()
         self.set_ready_screen()
         self.tap_image_animate()
         self.set_score()
         self.collision()
+        # self.set_game_over()
     
     def draw(self):
         self.screen.fill('black')
@@ -103,8 +117,8 @@ class Controller(Ui):
         self.pipe.draw(self.screen)
         self.ground.draw(self.screen)
         self.player.draw(self.screen)
-        self.draw_start_screen(self.screen)
-        self.draw_ready_screen(self.screen)
-        self.draw_score(self.screen,self.score)
-        self.draw_game_over(self.screen,self.score)
+        self.draw_start_screen()
+        self.draw_ready_screen()
+        self.draw_game_over()
+        self.draw_score()
         # print(self.player.sprite.player_status)

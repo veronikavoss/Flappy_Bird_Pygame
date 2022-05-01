@@ -79,7 +79,7 @@ class Asset:
         self.number_images={'large':[],'medium':[],'small':[]}
         
         # large number
-        large_number_offset=[[496,60,12,18],[136,455,12,18]]
+        large_number_offset=[[496,60,12,18],[134,455,12,18]]
         for rect in large_number_offset:
             surface=pygame.Surface((12,18))
             surface.blit(self.general_sheet_image,(0,0),rect)
