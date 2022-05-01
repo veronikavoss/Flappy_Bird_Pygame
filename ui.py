@@ -30,7 +30,7 @@ class Ui:
         self.score_board_image_rect=self.score_board_image.get_rect(centerx=SCREEN_WIDTH//2,bottom=SCREEN_HEIGHT//2)
         
         self.new_image=self.asset.ui_images['new']
-        self.new_image_rect=self.new_image.get_rect(center=(SCREEN_WIDTH/1.6,SKY_HEIGHT/1.94))
+        self.new_image_rect=self.new_image.get_rect(center=(SCREEN_WIDTH/1.6,SKY_HEIGHT/1.93))
         
         self.medal=0
         self.medal_image=self.asset.ui_images['medal'][self.medal]
@@ -67,36 +67,51 @@ class Ui:
         return self.number_width
     
     def draw_score(self):
+        # main_score
         if self.player.sprite.game_status!='start_screen' and self.player.sprite.game_status!='game_over_screen':
             size='large'
+            for idx,number in enumerate(reversed(list(str(self.score)))):
+                if idx==0:
+                    pos_x=SKY_WIDTH//2+(self.get_number_images_size(size)//2*(len(str(self.score))-1))
+                elif idx==1:
+                    pos_x=(SKY_WIDTH//2-self.get_number_images_size(size))+(self.get_number_images_size(size)//2*(len(str(self.score))-1))
+                elif idx==2:
+                    pos_x=(SKY_WIDTH//2-self.get_number_images_size(size)*2)+(self.get_number_images_size(size)//2*(len(str(self.score))-1))
+                elif idx==3:
+                    pos_x=(SKY_WIDTH//2-self.get_number_images_size(size)*3)+(self.get_number_images_size(size)//2*(len(str(self.score))-1))
+                number_image=self.asset.number_images[size][int(number)]
+                number_image_rect=number_image.get_rect(center=(pos_x,SKY_HEIGHT//8))
+                self.screen.blit(number_image,number_image_rect)
+            
+        # result_score
         elif self.player.sprite.game_status=='game_over_screen':
             size='medium'
-        
-        if self.player.sprite.game_status!='start_screen':
+            # current_score
             for idx,number in enumerate(reversed(list(str(self.score)))):
-                if size=='large':
-                    if idx==0:
-                        pos_x=SKY_WIDTH//2+(self.get_number_images_size(size)//2*(len(str(self.score))-1))
-                    elif idx==1:
-                        pos_x=(SKY_WIDTH//2-self.get_number_images_size(size))+(self.get_number_images_size(size)//2*(len(str(self.score))-1))
-                    elif idx==2:
-                        pos_x=(SKY_WIDTH//2-self.get_number_images_size(size)*2)+(self.get_number_images_size(size)//2*(len(str(self.score))-1))
-                    elif idx==3:
-                        pos_x=(SKY_WIDTH//2-self.get_number_images_size(size)*3)+(self.get_number_images_size(size)//2*(len(str(self.score))-1))
-                    number_image=self.asset.number_images[size][int(number)]
-                    number_image_rect=number_image.get_rect(center=(pos_x,SKY_HEIGHT//8))
-                elif size=='medium':
-                    if idx==0:
-                        pos_x=SKY_WIDTH/1.26
-                    elif idx==1:
-                        pos_x=(SKY_WIDTH/1.26-self.get_number_images_size(size))
-                    elif idx==2:
-                        pos_x=(SKY_WIDTH/1.26-self.get_number_images_size(size)*2)
-                    elif idx==3:
-                        pos_x=(SKY_WIDTH/1.26-self.get_number_images_size(size)*3)
-                    number_image=self.asset.number_images[size][int(number)]
-                    number_image_rect=number_image.get_rect(center=(pos_x,SKY_HEIGHT/2.15))
-                
+                if idx==0:
+                    pos_x=SKY_WIDTH/1.26
+                elif idx==1:
+                    pos_x=(SKY_WIDTH/1.26-self.get_number_images_size(size))
+                elif idx==2:
+                    pos_x=(SKY_WIDTH/1.26-self.get_number_images_size(size)*2)
+                elif idx==3:
+                    pos_x=(SKY_WIDTH/1.26-self.get_number_images_size(size)*3)
+                number_image=self.asset.number_images[size][int(number)]
+                number_image_rect=number_image.get_rect(center=(pos_x,SKY_HEIGHT/2.15))
+                self.screen.blit(number_image,number_image_rect)
+            
+            # best_score
+            for idx,number in enumerate(reversed(list(str(self.high_score)))):
+                if idx==0:
+                    pos_x=SKY_WIDTH/1.26
+                elif idx==1:
+                    pos_x=(SKY_WIDTH/1.26-self.get_number_images_size(size))
+                elif idx==2:
+                    pos_x=(SKY_WIDTH/1.26-self.get_number_images_size(size)*2)
+                elif idx==3:
+                    pos_x=(SKY_WIDTH/1.26-self.get_number_images_size(size)*3)
+                number_image=self.asset.number_images[size][int(number)]
+                number_image_rect=number_image.get_rect(center=(pos_x,SKY_HEIGHT/1.75))
                 self.screen.blit(number_image,number_image_rect)
     
     def draw_game_over(self):

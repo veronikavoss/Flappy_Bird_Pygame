@@ -20,13 +20,14 @@ class Controller(Ui):
         self.ready_position=True
         
         self.score=0
+        self.high_score=0
         self.best_score=False
         self.scoring=False
     
     def open_high_score(self):
         with open('high_score.txt','r') as r:
-            high_score=r.readline()
-            return int(high_score)
+            self.high_score=r.readline()
+            return int(self.high_score)
     
     def save_high_score(self):
         with open('high_score.txt','w') as w:
