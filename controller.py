@@ -59,6 +59,7 @@ class Controller(Ui):
                 self.player.sprite.game_status='playing_game'
                 self.player.sprite.player_status='playing'
                 self.ready_position=True
+                self.pipe_spawn_timer()
     
     def set_sky_image(self):
         sky=random.choice(list(self.asset.stage_images['sky'].keys()))
@@ -70,7 +71,12 @@ class Controller(Ui):
     def spawn_pipe(self):
         if self.player.sprite.game_status=='playing_game' and self.player.sprite.player_status=='playing':
             current_time=pygame.time.get_ticks()
-            if current_time-self.update_pipe_spawn_timer>=1300:
+            if not self.pipe:
+                time=3000
+            else:
+                time=1300
+            if current_time-self.update_pipe_spawn_timer>=time:
+                print(current_time-self.update_pipe_spawn_timer)
                 pipe_height=random.choice((
                     SKY_HEIGHT//9*3-PLAYER_HEIGHT*2.5,
                     SKY_HEIGHT//9*4-PLAYER_HEIGHT*2.5,
@@ -110,7 +116,6 @@ class Controller(Ui):
         self.tap_image_animate()
         self.set_score()
         self.collision()
-        # self.set_game_over()
     
     def draw(self):
         self.screen.fill('black')
@@ -123,3 +128,4 @@ class Controller(Ui):
         self.draw_game_over()
         self.draw_score()
         # print(self.player.sprite.player_status)
+        # print('y' if not self.pipe else 'n')
