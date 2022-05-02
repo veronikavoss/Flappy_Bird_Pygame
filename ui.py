@@ -118,7 +118,7 @@ class Ui:
         if self.player.sprite.game_status=='game_over_screen':
             if self.score>self.open_high_score():
                 self.best_score=True
-                self.save_high_score()
+                self.save_high_score(self.score)
             
             self.screen.blits([
                 [self.game_over_image,self.game_over_image_rect],

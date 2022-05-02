@@ -23,15 +23,16 @@ class Controller(Ui):
         self.high_score=0
         self.best_score=False
         self.scoring=False
+        self.crash=False
     
     def open_high_score(self):
         with open('high_score.txt','r') as r:
             self.high_score=r.readline()
             return int(self.high_score)
     
-    def save_high_score(self):
+    def save_high_score(self,score):
         with open('high_score.txt','w') as w:
-            w.write(str(self.score))
+            w.write(str(score))
     
     def set_play_button(self):
         # start_screen
@@ -39,14 +40,22 @@ class Controller(Ui):
             mouse_pos=pygame.mouse.get_pos()
             if self.play_button_rect.collidepoint(mouse_pos):
                 if pygame.mouse.get_pressed()[0]:
+                    self.asset.swooshing_sound.play()
                     self.player.sprite.game_status='ready_screen'
         # game_over__screen
         elif self.player.sprite.game_status=='game_over_screen':
             mouse_pos=pygame.mouse.get_pos()
             if self.play_button_rect.collidepoint(mouse_pos):
                 if pygame.mouse.get_pressed()[0]:
+                    self.asset.swooshing_sound.play()
                     self.__init__(self.screen,self.asset)
                     self.player.sprite.game_status='ready_screen'
+        # ranking_button
+        if self.player.sprite.game_status=='start_screen':
+            if self.ranking_button_rect.collidepoint(mouse_pos):
+                if pygame.mouse.get_pressed()[0]:
+                    self.asset.swooshing_sound.play()
+                    self.save_high_score(0)
     
     def set_ready_screen(self):
         # ready_screen
@@ -72,7 +81,7 @@ class Controller(Ui):
         if self.player.sprite.game_status=='playing_game' and self.player.sprite.player_status=='playing':
             current_time=pygame.time.get_ticks()
             if not self.pipe:
-                time=3000
+                time=2000
             else:
                 time=1300
             if current_time-self.update_pipe_spawn_timer>=time:
@@ -94,14 +103,18 @@ class Controller(Ui):
                 if self.player.sprite.rect.left>=pipe.rect.left:
                     self.score+=1
                     pipe.index=None
+                    self.asset.point_sound.play()
     
     def collision(self):
         player_collide_pipe=pygame.sprite.spritecollideany(self.player.sprite,self.pipe,pygame.sprite.collide_mask)
         player_collide_ground=pygame.sprite.collide_mask(self.player.sprite,self.ground.sprite)
-        if player_collide_pipe:
+        if player_collide_pipe and not self.crash:
             self.player.sprite.player_status='crash'
+            self.asset.crash_sound.play()
+            self.crash=True
         if player_collide_ground:
             self.player.sprite.player_status='die'
+            self.asset.die_sound.play()
             self.player.sprite.game_status='game_over_screen'
             self.player.sprite.gravity=0
             self.player.sprite.rect.bottom=SKY_HEIGHT-(PLAYER_WIDTH-PLAYER_HEIGHT)

@@ -5,13 +5,14 @@ class Asset:
         self.icon_sheet_image=pygame.image.load(os.path.join(IMAGE_PATH,'icon.png')).convert_alpha()
         self.general_sheet_image=pygame.image.load(os.path.join(IMAGE_PATH,'General.png')).convert_alpha()
         
-        self.get_ui_image()
-        self.get_number_image()
-        self.get_stage_image()
-        self.get_player_image()
-        self.get_pipe_image()
+        self.get_ui_images()
+        self.get_number_images()
+        self.get_stage_images()
+        self.get_player_images()
+        self.get_pipe_images()
+        self.get_sounds()
     
-    def get_ui_image(self):
+    def get_ui_images(self):
         self.title_icon=pygame.Surface((29,29))
         self.title_icon.blit(self.icon_sheet_image,(0,0),(592,0,29,29))
         
@@ -75,7 +76,7 @@ class Asset:
             surface=pygame.transform.scale(surface,(22*SCALE,22*SCALE))
             self.ui_images['medal'].append(surface)
     
-    def get_number_image(self):
+    def get_number_images(self):
         self.number_images={'large':[],'medium':[],'small':[]}
         
         # large number
@@ -116,7 +117,7 @@ class Asset:
                 surface=pygame.transform.scale(surface,(6*SCALE,7*SCALE))
                 self.number_images['small'].append(surface)
     
-    def get_stage_image(self):
+    def get_stage_images(self):
         sky_size=144,256
         ground_size=168,56
         self.stage_images={'sky':{'day':None,'night':None},'ground':None}
@@ -131,7 +132,7 @@ class Asset:
         self.stage_images['ground'].blit(self.general_sheet_image,(0,0),(292,0,168,56))
         self.stage_images['ground']=pygame.transform.scale(self.stage_images['ground'],GROUND_SIZE)
     
-    def get_player_image(self):
+    def get_player_images(self):
         self.player_images={'yellow':[],'blue':[],'red':[]}
         
         player_images_offset=[
@@ -148,7 +149,7 @@ class Asset:
                 surface=pygame.transform.scale(surface,PLAYER_SIZE)
                 self.player_images[color].append(surface)
     
-    def get_pipe_image(self):
+    def get_pipe_images(self):
         self.pipe_images={'red':None,'green':None}
         
         pipe_images_offset=[[0,323,26,160],[84,323,26,160]]
@@ -162,5 +163,15 @@ class Asset:
                 self.pipe_images['red']=surface 
             else:
                 self.pipe_images['green']=surface
-
-# Asset()
+    
+    def get_sounds(self):
+        self.swooshing_sound=pygame.mixer.Sound(os.path.join(SOUND_PATH,'sfx_swooshing.wav'))
+        self.swooshing_sound.set_volume(VOLUME*0.01)
+        self.die_sound=pygame.mixer.Sound(os.path.join(SOUND_PATH,'sfx_die.wav'))
+        self.die_sound.set_volume(VOLUME*0.01)
+        self.point_sound=pygame.mixer.Sound(os.path.join(SOUND_PATH,'sfx_point.wav'))
+        self.point_sound.set_volume(VOLUME*0.01)
+        self.wing_sound=pygame.mixer.Sound(os.path.join(SOUND_PATH,'sfx_wing.wav'))
+        self.wing_sound.set_volume(VOLUME*0.01)
+        self.crash_sound=pygame.mixer.Sound(os.path.join(SOUND_PATH,'sfx_hit.wav'))
+        self.crash_sound.set_volume(VOLUME*0.01)
