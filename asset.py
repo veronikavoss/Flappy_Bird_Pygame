@@ -11,6 +11,7 @@ class Asset:
         self.get_player_images()
         self.get_pipe_images()
         self.get_sounds()
+        self.set_font()
     
     def get_ui_images(self):
         self.title_icon=pygame.Surface((29,29))
@@ -175,3 +176,6 @@ class Asset:
         self.wing_sound.set_volume(VOLUME*0.01)
         self.crash_sound=pygame.mixer.Sound(os.path.join(SOUND_PATH,'sfx_hit.wav'))
         self.crash_sound.set_volume(VOLUME*0.01)
+    
+    def set_font(self):
+        self.font=pygame.font.SysFont(None,32)

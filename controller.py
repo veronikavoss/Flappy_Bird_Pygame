@@ -3,7 +3,7 @@ from pipe import Pipe
 from ground import Ground
 from player import Player
 from ui import Ui
-import random
+import random,time,operator
 
 class Controller(Ui):
     def __init__(self,screen,asset):
@@ -21,18 +21,39 @@ class Controller(Ui):
         
         self.score=0
         self.high_score=0
+        self.open_high_score()
         self.best_score=False
         self.scoring=False
         self.crash=False
+        self.mouse_status='idle'
+    
+    def set_mouse_status(self):
+        if self.mouse_status=='idle':
+            if pygame.mouse.get_pressed()[0]:
+                self.mouse_status='down'
+        elif self.mouse_status=='down':
+            if not pygame.mouse.get_pressed()[0]:
+                self.mouse_status='up'
+        elif self.mouse_status=='up':
+            if not pygame.mouse.get_pressed()[0]:
+                self.mouse_status='idle'
     
     def open_high_score(self):
+        high_score=[]
         with open('high_score.txt','r') as r:
-            self.high_score=r.readline()
-            return int(self.high_score)
+            score_data=r.readlines()
+            for score in score_data:
+                if score!='\n':
+                    high_score.append(score.split())
+        high_score.sort(key=operator.itemgetter(0),reverse=True)
+        if high_score:
+            self.high_score=int(high_score[0][0])
+        return high_score
     
-    def save_high_score(self,score):
-        with open('high_score.txt','w') as w:
-            w.write(str(score))
+    def save_high_score(self):
+        date=time.localtime()
+        with open('high_score.txt','a') as a:
+            a.write(f'\n{self.score} {date.tm_year}/{date.tm_mon}/{date.tm_mday} {date.tm_hour}:{date.tm_min}:{date.tm_sec}')
     
     def set_play_button(self):
         # start_screen
@@ -53,9 +74,9 @@ class Controller(Ui):
         # ranking_button
         if self.player.sprite.game_status=='start_screen':
             if self.ranking_button_rect.collidepoint(mouse_pos):
-                if pygame.mouse.get_pressed()[0]:
+                if self.mouse_status=='up':
                     self.asset.swooshing_sound.play()
-                    self.save_high_score(0)
+                    print(self.open_high_score())
     
     def set_ready_screen(self):
         # ready_screen
@@ -85,7 +106,6 @@ class Controller(Ui):
             else:
                 time=1300
             if current_time-self.update_pipe_spawn_timer>=time:
-                print(current_time-self.update_pipe_spawn_timer)
                 pipe_height=random.choice((
                     SKY_HEIGHT//9*3-PLAYER_HEIGHT*2.5,
                     SKY_HEIGHT//9*4-PLAYER_HEIGHT*2.5,
@@ -129,6 +149,7 @@ class Controller(Ui):
         self.tap_image_animate()
         self.set_score()
         self.collision()
+        self.set_mouse_status()
     
     def draw(self):
         self.screen.fill('black')
@@ -140,5 +161,3 @@ class Controller(Ui):
         self.draw_ready_screen()
         self.draw_game_over()
         self.draw_score()
-        # print(self.player.sprite.player_status)
-        # print('y' if not self.pipe else 'n')

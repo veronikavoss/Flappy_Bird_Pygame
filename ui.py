@@ -66,6 +66,26 @@ class Ui:
         self.number_width=number.get_size()[0]
         return self.number_width
     
+    def draw_game_over(self):
+        if self.player.sprite.game_status=='game_over_screen':
+            if self.score>self.high_score and not self.best_score:
+                self.save_high_score()
+                self.open_high_score()
+                self.best_score=True
+            
+            self.screen.blits([
+                [self.game_over_image,self.game_over_image_rect],
+                [self.score_board_image,self.score_board_image_rect],
+                *self.draw_button()
+            ])
+            self.medal=max(0,4-self.score//10)
+            if 0<=self.medal<=3:
+                self.medal_image=self.asset.ui_images['medal'][self.medal]
+                self.screen.blit(self.medal_image,self.medal_image_rect)
+            
+            if self.best_score:
+                self.screen.blit(self.new_image,self.new_image_rect)
+    
     def draw_score(self):
         # main_score
         if self.player.sprite.game_status!='start_screen' and self.player.sprite.game_status!='game_over_screen':
@@ -113,22 +133,3 @@ class Ui:
                 number_image=self.asset.number_images[size][int(number)]
                 number_image_rect=number_image.get_rect(center=(pos_x,SKY_HEIGHT/1.75))
                 self.screen.blit(number_image,number_image_rect)
-    
-    def draw_game_over(self):
-        if self.player.sprite.game_status=='game_over_screen':
-            if self.score>self.open_high_score():
-                self.best_score=True
-                self.save_high_score(self.score)
-            
-            self.screen.blits([
-                [self.game_over_image,self.game_over_image_rect],
-                [self.score_board_image,self.score_board_image_rect],
-                *self.draw_button()
-            ])
-            self.medal=max(0,4-self.score//10)
-            if 0<=self.medal<=3:
-                self.medal_image=self.asset.ui_images['medal'][self.medal]
-                self.screen.blit(self.medal_image,self.medal_image_rect)
-            
-            if self.best_score:
-                self.screen.blit(self.new_image,self.new_image_rect)
