@@ -17,7 +17,7 @@ class Asset:
         self.title_icon=pygame.Surface((29,29))
         self.title_icon.blit(self.icon_sheet_image,(0,0),(592,0,29,29))
         
-        self.ui_images={'logo':None,'play_button':None,'ranking_button':None,
+        self.ui_images={'logo':None,'play_button':None,'ranking_button':None,'back_button':None,
                         'ready':None,'tap':None,
                         'game_over':None,'score_board':None,'new':None,'medal':[]}
         
@@ -38,6 +38,11 @@ class Asset:
         ranking_img.set_colorkey((0,0,0))
         ranking_img=pygame.transform.scale(ranking_img,(52*SCALE,29*SCALE))
         self.ui_images['ranking_button']=ranking_img
+        
+        back_button=pygame.Surface((40,14))
+        back_button.blit(self.general_sheet_image,(0,0),(462,42,40,14))
+        back_button=pygame.transform.scale(back_button,(40*SCALE,14*SCALE))
+        self.ui_images['back_button']=back_button
         
         ready_img=pygame.Surface((92,25))
         ready_img.blit(self.general_sheet_image,(0,0),(295,59,92,25))

@@ -16,6 +16,9 @@ class Ui:
         self.ranking_button=self.asset.ui_images['ranking_button']
         self.ranking_button_rect=self.ranking_button.get_rect(center=(SKY_WIDTH-(SKY_WIDTH//3.6),SCREEN_HEIGHT//1.5))
         
+        self.back_button=self.asset.ui_images['back_button']
+        self.back_button_rect=self.back_button.get_rect(center=(SCREEN_WIDTH/2,SCREEN_HEIGHT/1.2))
+            
         self.ready_image=self.asset.ui_images['ready']
         self.ready_image_rect=self.ready_image.get_rect(center=(SKY_WIDTH//2,SKY_HEIGHT//3))
         
@@ -36,15 +39,12 @@ class Ui:
         self.medal_image=self.asset.ui_images['medal'][self.medal]
         self.medal_image_rect=self.medal_image.get_rect(center=(SCREEN_WIDTH/3.6,SKY_HEIGHT/1.9))
     
-    def draw_button(self):
-        button=[[self.play_button,self.play_button_rect],[self.ranking_button,self.ranking_button_rect]]
-        return button
-    
     def draw_start_screen(self):
         if self.player.sprite.game_status=='start_screen':
             self.screen.blits([
                 [self.logo_image,self.logo_image_rect],
-                *self.draw_button()
+                [self.play_button,self.play_button_rect],
+                [self.ranking_button,self.ranking_button_rect]
             ])
     
     def tap_image_animate(self):
@@ -76,7 +76,8 @@ class Ui:
             self.screen.blits([
                 [self.game_over_image,self.game_over_image_rect],
                 [self.score_board_image,self.score_board_image_rect],
-                *self.draw_button()
+                [self.play_button,self.play_button_rect],
+                [self.ranking_button,self.ranking_button_rect]
             ])
             self.medal=max(0,4-self.score//10)
             if 0<=self.medal<=3:
@@ -88,7 +89,7 @@ class Ui:
     
     def draw_score(self):
         # main_score
-        if self.player.sprite.game_status!='start_screen' and self.player.sprite.game_status!='game_over_screen':
+        if self.player.sprite.game_status!='start_screen' and self.player.sprite.game_status!='game_over_screen' and self.player.sprite.game_status!='rank_screen':
             size='large'
             for idx,number in enumerate(reversed(list(str(self.score)))):
                 if idx==0:
@@ -133,3 +134,18 @@ class Ui:
                 number_image=self.asset.number_images[size][int(number)]
                 number_image_rect=number_image.get_rect(center=(pos_x,SKY_HEIGHT/1.75))
                 self.screen.blit(number_image,number_image_rect)
+    
+    def draw_rank(self):
+        if self.player.sprite.game_status=='rank_screen':
+            # rank_background
+            surface=pygame.Surface(SCREEN_SIZE)
+            surface.fill('black')
+            surface.set_alpha(128)
+            
+            self.screen.blits([[surface,(0,0)],[self.back_button,self.back_button_rect]])
+            
+            for idx,score in enumerate(self.open_high_score()):
+                rank=self.asset.font.render('{}.  {} pts  {}, {}'.format(idx+1,score[0],score[1],score[2]),True,'white')
+                y=idx*rank.get_height()+20
+                rank_rect=rank.get_rect(centerx=SCREEN_WIDTH/2,y=y)
+                self.screen.blit(rank,rank_rect)

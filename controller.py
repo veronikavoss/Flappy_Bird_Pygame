@@ -55,7 +55,7 @@ class Controller(Ui):
         with open('high_score.txt','a') as a:
             a.write(f'\n{self.score} {date.tm_year}/{date.tm_mon}/{date.tm_mday} {date.tm_hour}:{date.tm_min}:{date.tm_sec}')
     
-    def set_play_button(self):
+    def set_buttons(self):
         # start_screen
         if self.player.sprite.game_status=='start_screen':
             mouse_pos=pygame.mouse.get_pos()
@@ -72,11 +72,23 @@ class Controller(Ui):
                     self.__init__(self.screen,self.asset)
                     self.player.sprite.game_status='ready_screen'
         # ranking_button
-        if self.player.sprite.game_status=='start_screen':
+        if self.player.sprite.game_status=='start_screen' or self.player.sprite.game_status=='game_over_screen':
             if self.ranking_button_rect.collidepoint(mouse_pos):
                 if self.mouse_status=='up':
                     self.asset.swooshing_sound.play()
                     print(self.open_high_score())
+                    self.player.sprite.game_status='rank_screen'
+        # back_button
+        if self.player.sprite.game_status=='rank_screen':
+            mouse_pos=pygame.mouse.get_pos()
+            if self.back_button_rect.collidepoint(mouse_pos):
+                if self.mouse_status=='up':
+                    self.asset.swooshing_sound.play()
+                    print(self.open_high_score())
+                    if self.player.sprite.player_status=='idle':
+                        self.player.sprite.game_status='start_screen'
+                    else:
+                        self.player.sprite.game_status='game_over_screen'
     
     def set_ready_screen(self):
         # ready_screen
@@ -144,7 +156,7 @@ class Controller(Ui):
         self.pipe.update(self.player.sprite.player_status)
         self.ground.update(self.player.sprite.player_status)
         self.player.update()
-        self.set_play_button()
+        self.set_buttons()
         self.set_ready_screen()
         self.tap_image_animate()
         self.set_score()
@@ -161,3 +173,5 @@ class Controller(Ui):
         self.draw_ready_screen()
         self.draw_game_over()
         self.draw_score()
+        self.draw_rank()
+        print(self.player.sprite.player_status)
