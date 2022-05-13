@@ -183,4 +183,5 @@ class Asset:
         self.crash_sound.set_volume(VOLUME*0.01)
     
     def set_font(self):
-        self.font=pygame.font.SysFont(None,32)
+        self.high_score_font=pygame.font.SysFont(None,32)
+        self.ranking_font=pygame.font.SysFont(None,50)

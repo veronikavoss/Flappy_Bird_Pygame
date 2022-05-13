@@ -51,8 +51,9 @@ class Player(pygame.sprite.Sprite):
     def set_key_input(self):
         if self.game_status=='playing_game' and self.player_status=='playing':
             key_input=pygame.key.get_pressed()
-            if key_input[pygame.K_SPACE] or key_input[pygame.K_RIGHT]:
-                if not self.jump_pressed:
+            mouse_input=pygame.mouse.get_pressed()[0]
+            if key_input[pygame.K_SPACE] or mouse_input:
+                if not self.jump_pressed and self.rect.bottom>0:
                     self.direction.y=self.jump_speed
                     self.asset.wing_sound.play()
                     self.jump_pressed=True

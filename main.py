@@ -2,7 +2,7 @@ from setting import *
 from asset import Asset
 from controller import Controller
 
-class Main:
+class FlappyBird:
     def __init__(self):
         pygame.init()
         pygame.display.set_caption(TITLE)
@@ -37,5 +37,5 @@ class Main:
         self.controller.draw()
 
 if __name__=='__main__':
-    Main()
+    FlappyBird()
     pygame.quit()

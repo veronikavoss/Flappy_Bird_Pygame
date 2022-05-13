@@ -89,7 +89,9 @@ class Ui:
     
     def draw_score(self):
         # main_score
-        if self.player.sprite.game_status!='start_screen' and self.player.sprite.game_status!='game_over_screen' and self.player.sprite.game_status!='rank_screen':
+        if self.player.sprite.game_status!='start_screen' and \
+            self.player.sprite.game_status!='game_over_screen' and \
+                self.player.sprite.game_status!='rank_screen':
             size='large'
             for idx,number in enumerate(reversed(list(str(self.score)))):
                 if idx==0:
@@ -142,10 +144,20 @@ class Ui:
             surface.fill('black')
             surface.set_alpha(128)
             
-            self.screen.blits([[surface,(0,0)],[self.back_button,self.back_button_rect]])
+            # ranking_text
+            ranking=self.asset.ranking_font.render('RANKING',True,'green')
+            ranking_rect=ranking.get_rect(centerx=SCREEN_WIDTH//2,y=20)
             
-            for idx,score in enumerate(self.open_high_score()):
-                rank=self.asset.font.render('{}.  {} pts  {}, {}'.format(idx+1,score[0],score[1],score[2]),True,'white')
-                y=idx*rank.get_height()+20
-                rank_rect=rank.get_rect(centerx=SCREEN_WIDTH/2,y=y)
+            self.screen.blits([[surface,(0,0)],[ranking,ranking_rect],[self.back_button,self.back_button_rect]])
+            
+            # high_score_ranking
+            if self.open_high_score():
+                for idx,score in enumerate(self.open_high_score()[0:15]):
+                    rank=self.asset.high_score_font.render(f'{idx+1}.  {score[0]} pts  {score[1]}, {score[2]}',True,'white')
+                    y=idx*(rank.get_height()+rank.get_height()/2)+70
+                    rank_rect=rank.get_rect(x=SCREEN_WIDTH/6,y=y)
+                    self.screen.blit(rank,rank_rect)
+            else:
+                rank=self.asset.high_score_font.render('No Result',True,'white')
+                rank_rect=rank.get_rect(centerx=SCREEN_WIDTH/2,y=70)
                 self.screen.blit(rank,rank_rect)

@@ -11,13 +11,14 @@ class Controller(Ui):
         self.screen=screen
         self.asset=asset
         
+        self.mouse_status='idle'
         self.set_sky_image()
         self.pipe_color=random.choice(('red','green'))
         self.update_pipe_spawn_timer=0
         self.pipe=pygame.sprite.Group()
         self.ground=pygame.sprite.GroupSingle(Ground(self.asset))
         self.player=pygame.sprite.GroupSingle(Player(self.asset))
-        self.ready_position=True
+        self.ready_position=False
         
         self.score=0
         self.high_score=0
@@ -25,7 +26,6 @@ class Controller(Ui):
         self.best_score=False
         self.scoring=False
         self.crash=False
-        self.mouse_status='idle'
     
     def set_mouse_status(self):
         if self.mouse_status=='idle':
@@ -56,18 +56,18 @@ class Controller(Ui):
             a.write(f'\n{self.score} {date.tm_year}/{date.tm_mon}/{date.tm_mday} {date.tm_hour}:{date.tm_min}:{date.tm_sec}')
     
     def set_buttons(self):
-        # start_screen
+        # start_screen_play_button
         if self.player.sprite.game_status=='start_screen':
             mouse_pos=pygame.mouse.get_pos()
             if self.play_button_rect.collidepoint(mouse_pos):
-                if pygame.mouse.get_pressed()[0]:
+                if self.mouse_status=='up':
                     self.asset.swooshing_sound.play()
                     self.player.sprite.game_status='ready_screen'
-        # game_over__screen
+        # game_over_screen_play_button
         elif self.player.sprite.game_status=='game_over_screen':
             mouse_pos=pygame.mouse.get_pos()
             if self.play_button_rect.collidepoint(mouse_pos):
-                if pygame.mouse.get_pressed()[0]:
+                if self.mouse_status=='up':
                     self.asset.swooshing_sound.play()
                     self.__init__(self.screen,self.asset)
                     self.player.sprite.game_status='ready_screen'
@@ -76,7 +76,6 @@ class Controller(Ui):
             if self.ranking_button_rect.collidepoint(mouse_pos):
                 if self.mouse_status=='up':
                     self.asset.swooshing_sound.play()
-                    print(self.open_high_score())
                     self.player.sprite.game_status='rank_screen'
         # back_button
         if self.player.sprite.game_status=='rank_screen':
@@ -84,7 +83,6 @@ class Controller(Ui):
             if self.back_button_rect.collidepoint(mouse_pos):
                 if self.mouse_status=='up':
                     self.asset.swooshing_sound.play()
-                    print(self.open_high_score())
                     if self.player.sprite.player_status=='idle':
                         self.player.sprite.game_status='start_screen'
                     else:
@@ -93,14 +91,13 @@ class Controller(Ui):
     def set_ready_screen(self):
         # ready_screen
         if self.player.sprite.game_status=='ready_screen':
-            if self.ready_position:
-                self.player.sprite.set_position()
-                self.ready_position=False
             key_input=pygame.key.get_pressed()
-            if key_input[pygame.K_SPACE] or key_input[pygame.K_RIGHT]:
+            if not self.ready_position:
+                self.player.sprite.set_position()
+                self.ready_position=True
+            if key_input[pygame.K_SPACE] or self.mouse_status=='down':
                 self.player.sprite.game_status='playing_game'
                 self.player.sprite.player_status='playing'
-                self.ready_position=True
                 self.pipe_spawn_timer()
     
     def set_sky_image(self):
@@ -156,12 +153,12 @@ class Controller(Ui):
         self.pipe.update(self.player.sprite.player_status)
         self.ground.update(self.player.sprite.player_status)
         self.player.update()
-        self.set_buttons()
+        self.set_mouse_status()
         self.set_ready_screen()
         self.tap_image_animate()
-        self.set_score()
+        self.set_buttons()
         self.collision()
-        self.set_mouse_status()
+        self.set_score()
     
     def draw(self):
         self.screen.fill('black')
@@ -174,4 +171,3 @@ class Controller(Ui):
         self.draw_game_over()
         self.draw_score()
         self.draw_rank()
-        print(self.player.sprite.player_status)
