@@ -50,10 +50,14 @@ class Controller(Ui):
             self.high_score=int(high_score[0][0])
         return high_score
     
-    def save_high_score(self):
-        date=time.localtime()
-        with open('high_score.txt','a') as a:
-            a.write(f'\n{self.score} {date.tm_year}/{date.tm_mon}/{date.tm_mday} {date.tm_hour}:{date.tm_min}:{date.tm_sec}')
+    def save_high_score(self,score=None):
+        if score:
+            date=time.localtime()
+            with open('high_score.txt','a') as a:
+                a.write(f'\n{self.score} {date.tm_year}/{date.tm_mon}/{date.tm_mday} {date.tm_hour}:{date.tm_min}:{date.tm_sec}')
+        else:
+            with open('high_score.txt','w') as w:
+                w.write('')
     
     def set_buttons(self):
         # start_screen_play_button
@@ -77,10 +81,15 @@ class Controller(Ui):
                 if self.mouse_status=='up':
                     self.asset.swooshing_sound.play()
                     self.player.sprite.game_status='rank_screen'
-        # back_button
+        # reset_button
         if self.player.sprite.game_status=='rank_screen':
             mouse_pos=pygame.mouse.get_pos()
-            if self.back_button_rect.collidepoint(mouse_pos):
+            if self.reset_button_rect.collidepoint(mouse_pos):
+                if self.mouse_status=='up':
+                    self.asset.swooshing_sound.play()
+                    self.save_high_score()
+        # back_button
+            elif self.back_button_rect.collidepoint(mouse_pos):
                 if self.mouse_status=='up':
                     self.asset.swooshing_sound.play()
                     if self.player.sprite.player_status=='idle':

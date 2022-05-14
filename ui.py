@@ -16,9 +16,12 @@ class Ui:
         self.ranking_button=self.asset.ui_images['ranking_button']
         self.ranking_button_rect=self.ranking_button.get_rect(center=(SKY_WIDTH-(SKY_WIDTH//3.6),SCREEN_HEIGHT//1.5))
         
+        self.reset_button=self.asset.ui_images['reset_button']
+        self.reset_button_rect=self.reset_button.get_rect(center=(SCREEN_WIDTH/2,SCREEN_HEIGHT/1.3))
+        
         self.back_button=self.asset.ui_images['back_button']
         self.back_button_rect=self.back_button.get_rect(center=(SCREEN_WIDTH/2,SCREEN_HEIGHT/1.2))
-            
+        
         self.ready_image=self.asset.ui_images['ready']
         self.ready_image_rect=self.ready_image.get_rect(center=(SKY_WIDTH//2,SKY_HEIGHT//3))
         
@@ -69,7 +72,7 @@ class Ui:
     def draw_game_over(self):
         if self.player.sprite.game_status=='game_over_screen':
             if self.score>self.high_score and not self.best_score:
-                self.save_high_score()
+                self.save_high_score(score=self.score)
                 self.open_high_score()
                 self.best_score=True
             
@@ -148,7 +151,11 @@ class Ui:
             ranking=self.asset.ranking_font.render('RANKING',True,'green')
             ranking_rect=ranking.get_rect(centerx=SCREEN_WIDTH//2,y=20)
             
-            self.screen.blits([[surface,(0,0)],[ranking,ranking_rect],[self.back_button,self.back_button_rect]])
+            self.screen.blits([
+                [surface,(0,0)],
+                [ranking,ranking_rect],
+                [self.reset_button,self.reset_button_rect],
+                [self.back_button,self.back_button_rect]])
             
             # high_score_ranking
             if self.open_high_score():

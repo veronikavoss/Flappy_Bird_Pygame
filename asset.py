@@ -17,9 +17,11 @@ class Asset:
         self.title_icon=pygame.Surface((29,29))
         self.title_icon.blit(self.icon_sheet_image,(0,0),(592,0,29,29))
         
-        self.ui_images={'logo':None,'play_button':None,'ranking_button':None,'back_button':None,
-                        'ready':None,'tap':None,
-                        'game_over':None,'score_board':None,'new':None,'medal':[]}
+        self.ui_images={
+            'logo':None,'play_button':None,'ranking_button':None,'reset_button':None,'back_button':None,
+            'ready':None,'tap':None,
+            'game_over':None,'score_board':None,'new':None,'medal':[]
+            }
         
         logo_img=pygame.Surface((89,24))
         logo_img.blit(self.general_sheet_image,(0,0),(351,91,89,24))
@@ -38,6 +40,11 @@ class Asset:
         ranking_img.set_colorkey((0,0,0))
         ranking_img=pygame.transform.scale(ranking_img,(52*SCALE,29*SCALE))
         self.ui_images['ranking_button']=ranking_img
+        
+        reset_button=pygame.Surface((40,14))
+        reset_button.blit(self.general_sheet_image,(0,0),(353,160,40,14))
+        reset_button=pygame.transform.scale(reset_button,(40*SCALE,14*SCALE))
+        self.ui_images['reset_button']=reset_button
         
         back_button=pygame.Surface((40,14))
         back_button.blit(self.general_sheet_image,(0,0),(462,42,40,14))
