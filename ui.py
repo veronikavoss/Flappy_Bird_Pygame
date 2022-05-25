@@ -71,7 +71,12 @@ class Ui:
     
     def draw_game_over(self):
         if self.player.sprite.game_status=='game_over_screen':
-            if self.score>self.high_score and not self.best_score:
+            if self.open_high_score():
+                high_score=self.open_high_score()[0][0]
+            else:
+                high_score=0
+            
+            if self.score>int(high_score) and not self.best_score:
                 self.save_high_score(score=self.score)
                 self.open_high_score()
                 self.best_score=True
@@ -87,7 +92,7 @@ class Ui:
                 self.medal_image=self.asset.ui_images['medal'][self.medal]
                 self.screen.blit(self.medal_image,self.medal_image_rect)
             
-            if self.best_score:
+            if self.best_score and not self.reset_high_score:
                 self.screen.blit(self.new_image,self.new_image_rect)
     
     def draw_score(self):
@@ -108,7 +113,6 @@ class Ui:
                 number_image=self.asset.number_images[size][int(number)]
                 number_image_rect=number_image.get_rect(center=(pos_x,SKY_HEIGHT//8))
                 self.screen.blit(number_image,number_image_rect)
-            
         # result_score
         elif self.player.sprite.game_status=='game_over_screen':
             size='medium'
@@ -127,7 +131,12 @@ class Ui:
                 self.screen.blit(number_image,number_image_rect)
             
             # best_score
-            for idx,number in enumerate(reversed(list(str(self.high_score)))):
+            if self.open_high_score():
+                score=self.open_high_score()[0][0]
+            else:
+                score=0
+            
+            for idx,number in enumerate(reversed(list(str(score)))):
                 if idx==0:
                     pos_x=SKY_WIDTH/1.26
                 elif idx==1:

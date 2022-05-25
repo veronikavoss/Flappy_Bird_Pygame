@@ -22,8 +22,8 @@ class FlappyBird:
             self.event()
             self.update()
             self.draw()
-            pygame.display.update()
             self.clock.tick(FPS)
+            pygame.display.update()
     
     def event(self):
         for event in pygame.event.get():

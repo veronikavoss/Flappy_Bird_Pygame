@@ -21,9 +21,9 @@ class Controller(Ui):
         self.ready_position=False
         
         self.score=0
-        self.high_score=0
         self.open_high_score()
         self.best_score=False
+        self.reset_high_score=False
         self.scoring=False
         self.crash=False
     
@@ -46,8 +46,6 @@ class Controller(Ui):
                 if score!='\n':
                     high_score.append(score.split())
         high_score.sort(key=operator.itemgetter(0),reverse=True)
-        if high_score:
-            self.high_score=int(high_score[0][0])
         return high_score
     
     def save_high_score(self,score=None):
@@ -88,6 +86,8 @@ class Controller(Ui):
                 if self.mouse_status=='up':
                     self.asset.swooshing_sound.play()
                     self.save_high_score()
+                    if self.player.sprite.player_status=='die':
+                        self.reset_high_score=True
         # back_button
             elif self.back_button_rect.collidepoint(mouse_pos):
                 if self.mouse_status=='up':
